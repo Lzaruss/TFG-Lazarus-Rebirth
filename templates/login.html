@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lazarus Rebirth</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='login.css') }}">
+  </head>
+  <body>
+    <div class="login-container">
+      <h1>Lazarus Rebirth</h1>
+      <form action="/" method="POST">
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" name="password" required>
+
+        <input type="submit" value="Acceder">
+      </form>
+
+    {% if error %}
+      <p class="error">Alguno de los datos esta incorrecto</p>
+    {% endif %}
+    
+    <button onclick="window.location.href='/registrar.html'" class="register-button">Si aun no tienes una cuenta, haz click aqui!</button>
+
+    </div>
+  </body>
+</html>
