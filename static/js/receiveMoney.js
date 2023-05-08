@@ -3,7 +3,7 @@ import { showErrorPopup, showSuccessPopup } from './utils.js';
 fetch('/actualUser')
   .then(response => response.text())
   .then(data => {
-    document.getElementById('sender-input').placeholder = data;
+    document.getElementById('sender-input').placeholder = JSON.parse(data).user;
   })
 
 function sendNotify(){

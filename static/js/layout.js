@@ -14,9 +14,9 @@ function notifyInterval(){
         link.textContent = "No tienes notificaciones";
         popup.appendChild(link);
       }else{
-        badge.textContent = notifications.length;
+        badge.textContent = notifications.notifys.length;
 
-        notifications.forEach(notification => {
+        notifications.notifys.forEach(notification => {
           const link = document.createElement('a');
           link.textContent = "De: " + notification.FROM + " | Mensaje: " + notification.message + " | Cantidad: " + notification.AMOUNT + "€" + " - " + notification.TIME;
           popup.appendChild(link);

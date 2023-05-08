@@ -5,10 +5,11 @@ fetch('/getHistory')
   .then(response => response.json())
   .then(data => {
     const table = document.querySelector('.transactions-table');
-    for (let i = 0; i < data.length; i++) {
-      const { FROM, TO, AMOUNT, TIME } = data[i];
+    for (let i = 0; i < data.transactions.length; i++) {
+      const { FROM, TO, AMOUNT, TIME } = data.transactions[i];
       const row = table.insertRow(-1);
       row.insertCell(0).textContent = i + 1;
+      
       [FROM, TO, AMOUNT, TIME].forEach((field, index) => {
         row.insertCell(index + 1).textContent = field;
       });

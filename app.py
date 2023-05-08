@@ -5,6 +5,11 @@ import json
 
 app = Flask(__name__)
 
+with open('config.json') as config_file:
+    config = json.load(config_file)
+firebase = pyrebase.initialize_app(config) 
+auth = firebase.auth()
+app.secret_key = 'secret_key'
 
 @app.route('/', methods=["POST", "GET"])
 def index():
@@ -137,21 +142,14 @@ def configuracion():
 @app.route("/saldo", methods=["GET"], )
 def saldo():
     try:
-        return str(ddbb.getBalance(ddbb.getUser(session['user'])))
-    except:
-        return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
-
-@app.route("/wallet", methods=["GET"], )
-def wallet():
-    try:
-        return str(ddbb.getWallet(ddbb.getUser(session['user'])))
+        return {"saldo" : str(ddbb.getBalance(ddbb.getUser(session['user'])))}
     except:
         return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 
 @app.route("/actualUser", methods=["GET"])  
 def actualUser():
     try:
-        return ddbb.getUser(session['user'])
+        return {"user" : ddbb.getUser(session['user'])}
     finally:
         pass
 
@@ -161,6 +159,8 @@ def sendBalance():
     if request.method == "POST":
         userTo  = request.json.get("receiver")
         balance = request.json.get("amount")
+        if balance <= 0:
+            return {"error": "La cantidad debe ser mayor que 0"}
         userFrom = ddbb.getUser(session['user'])
 
         if not ddbb.checkUser(userTo) and not ddbb.checkWallet(userTo): 
@@ -201,7 +201,7 @@ def sendNotification():
 @app.route("/getHistory", methods=["GET"])
 def getHistory():
     try:
-        return ddbb.getTransactions(ddbb.getUser(session['user']))
+        return {"transactions" : ddbb.getTransactions(ddbb.getUser(session['user']))}
     except:
         return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 
@@ -210,7 +210,7 @@ def getHistory():
 @app.route("/getNotifications", methods=["GET"])
 def getNotifications():
     try:
-        return ddbb.getNotifications(ddbb.getUser(session['user']))
+        return {"notifys" : ddbb.getNotifications(ddbb.getUser(session['user']))}
     except:
         return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 
@@ -236,7 +236,7 @@ def deleteTransaction():
 @app.route("/getAccount", methods=["GET"]) ###
 def getAccount():
     try:
-        return ddbb.getAccount(ddbb.getUser(session['user']))
+        return {"account" : ddbb.getAccount(ddbb.getUser(session['user']))}
     except:
         return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 
@@ -260,9 +260,5 @@ def changePassword():
 
 if __name__ == '__main__':
     print("Server started")
-    with open('config.json') as config_file:
-        config = json.load(config_file)
-    firebase = pyrebase.initialize_app(config) 
-    auth = firebase.auth()
-    app.secret_key = 'secret_key'
+
     app.run(port=1111)

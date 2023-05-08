@@ -1,5 +1,6 @@
 import { showErrorPopup, showSuccessPopup } from './utils.js';
 
+// funcion para aclarar el color de los elementos del menu cuando cambias el color en la configuracion
 function lightenColor(color, amount) {
     var r = parseInt(color.substring(1,3),16);
     var g = parseInt(color.substring(3,5),16);
