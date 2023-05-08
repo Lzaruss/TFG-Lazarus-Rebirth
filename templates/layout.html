@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lazarus Rebirth</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/layout.css') }}">
+    {% if config %}
+      <style>
+        :root {
+          --menu-background: {{ config.color }};
+          --menu-hover: {{ config.hover_color }};
+        }
+      </style>
+
+    {% endif %}
+  </head>
+  <body>
+    <header style="background-color: var(--menu-background);">
+      <div class="menu-btn">
+        <label for="show-menu" class="show-menu-btn">&#9776;</label>
+      </div>
+      <div class="logo">
+        <h1>Lazarus Rebirth</h1>
+      </div>
+      <input type="checkbox" id="show-menu" role="button" checked>
+      <div class="notification-button">
+        <button class="popup-button">
+          <i class="fa fa-bell"></i>
+          <span class="badge"></span>
+        </button>
+        <div class="popup">
+        </div>
+      </div>
+      <div class="menu" style="background-color: var(--menu-background);">
+        <a href="/account"><img src="{{ url_for('static', filename='img/account.png') }}">Perfil</a>
+        <a href="/transactions"><img src="{{ url_for('static', filename='img/transaction.png') }}">Transacciones</a>
+        <a href="/send"><img src="{{ url_for('static', filename='img/sendMoney.png') }}">Enviar Dinero</a>
+        <a href="/receive"><img src="{{ url_for('static', filename='img/receiveMoney.png') }}">Solicitar Dinero</a>
+        <a href="/settings"><img src="{{ url_for('static', filename='img/config.png') }}">Configuracion</a>
+        <a href="/logout"><img src="{{ url_for('static', filename='img/logout.png') }}">Cerrar sesión</a>
+      </div>
+    </header>
+    <div class="content">
+      <main>
+        <!-- aquí va el contenido específico de cada página -->
+        {% block content %}
+        {% endblock %}
+        <div id="error-popup" class="error-popup" style="display: none;"></div>
+        <div id="success-popup" class="success-popup" style="display: none;"></div>
+
+      </main>
+    </div>
+    <footer>
+      <div class="copy">
+        CopyRight&copy; Lazarus Rebirth
+      </div>
+      <div class="created-by">
+        Created by @Lzaruss
+      </div>
+    </footer>
+  </body>
+  <script type="module" src="{{ url_for('static', filename='js/layout.js') }}"></script>
+</html>

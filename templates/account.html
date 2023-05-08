@@ -1,0 +1,30 @@
+<!-- sendMoney.html -->
+{% extends 'layout.html' %}
+
+{% block content %}
+  <div class="content-home">
+    <h1 class="title-home">Mi Cuenta</h1>
+    <div class="send-to">
+      <label for="sender-input" class="send-to-label">Username</label>
+      <input type="text" id="username-account" class="send-to-input" disabled>
+    </div>
+
+    <div class="send-to">
+      <label for="sender-input" class="send-to-label">Cartera</label>
+      <input type="text" id="wallet-account" class="send-to-input" disabled>
+    </div>
+
+    <div class="send-to">
+      <label for="sender-input" class="send-to-label">Email</label>
+      <input type="text" id="email-account" class="send-to-input" disabled>
+    </div>
+
+    <div class="send-to">
+      <label for="sender-input" class="send-to-label">Balance</label>
+      <input type="text" id="balance-account" class="send-to-input" disabled>
+    </div>
+
+  </div>
+
+  <script src="{{ url_for('static', filename='js/account.js') }}"></script>
+{% endblock %}

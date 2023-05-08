@@ -1,0 +1,470 @@
+/*layout.html estilos globales*/
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+  }
+  
+  header {
+    user-select: none;
+    background-color: #222;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    position: fixed;
+    height: 66px;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+  }
+  
+  .logo {
+    flex: 1;
+  }
+  
+  .logo h1 {
+    margin: 0;
+  }
+  
+  .show-menu-btn {
+    font-size: 30px;
+    cursor: pointer;
+    float: left;
+  }
+  
+  #show-menu{
+        display: none;
+  }
+
+  .menu-btn {
+    flex: 1;
+    text-align: right;
+    margin-left: 10px;
+
+  }
+  
+  .menu {
+    background-color: #222;
+    color: #cccccc;
+    height: 100%;
+    position: fixed;
+    top: 80px;
+    left: -300px;
+    width: 220px;
+    transition: left 0.5s;
+    z-index: 999;
+    padding: 20px;
+    font-size: 18px;
+  }
+
+  .menu a {
+    color: #fff;
+    display: flex;
+    margin-bottom: 50px;
+    text-decoration: none;
+    height: 50px;
+    display: flex;
+    align-items: center;
+  }
+
+  .menu a:hover {
+    background-color: var(--menu-hover);
+  }
+  
+  .menu img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  
+  #show-menu:checked ~ .menu {
+    left: 0;
+  }
+  
+  .content {
+    margin-top: 100px;
+    margin-left: 300px;
+    padding: 20px;
+  }
+  
+  footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #f1f1f1;
+    text-align: center;
+    padding: 10px 0;
+  }
+  
+  .copy {
+    font-size: 14px;
+  }
+  
+  .created-by {
+    font-size: 12px;
+  }
+
+/*notification styles*/
+
+.notification-button {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+.popup-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.popup-button:hover {
+  background-color: #0069d9;
+}
+
+.popup-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
+}
+
+.popup {
+  display: none;
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 0.5rem;
+  z-index: 1;
+  max-height: 20rem;
+  overflow-y: auto;
+  width: 20rem;
+}
+
+.popup-button:focus + .popup {
+  display: block;
+}
+
+.popup > * + * {
+  margin-top: 0.5rem;
+}
+
+.badge {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  background-color: #dc3545;
+  color: #fff;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  padding: 0.15rem 0.35rem;
+  border-radius: 50%;
+}
+
+.popup a {
+  display: block;
+  padding: 5px 10px;
+  color: #333;
+  border-top: #222;
+}
+
+.popup a:hover {
+  background-color: #eee;
+}
+
+/* ERROR & SUCEESS styles */
+
+.error-popup {
+  position: fixed;
+  top: 100px; /* Distancia desde arriba */
+  left: 50%; /* Centrado horizontal */
+  transform: translateX(-50%); /* Centrado horizontal */
+  padding: 10px;
+  background-color: #ff5c5c; /* Fondo rojo */
+  border-color: red;
+  color: white; /* Texto blanco */
+  border-radius: 5px; /* Bordes redondeados */
+  text-align: center;
+  font-weight: bold;
+  transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+
+}
+
+.success-popup {
+  position: fixed;
+  top: 100px; /* Distancia desde arriba */
+  left: 50%; /* Centrado horizontal */
+  transform: translateX(-50%); /* Centrado horizontal */
+  background-color: greenyellow;
+  border-color: green;
+  padding: 10px;
+  color: white;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+  transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+}
+
+/* sendMoney.html styles */
+
+.title-home {
+  font-size: 56px;
+  /*Pon el texto en negrita*/
+  font-weight: bold;
+}
+
+.subtitle-home {
+  font-size: 24px;
+  font-weight: bold;
+
+  margin-bottom: 40px;
+}
+
+.send-to {
+  margin-bottom: 20px;
+}
+
+.send-to-label {
+  display: block;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.send-to-input {
+  display: block;
+  width: 90%;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.send-to-input:focus {
+  outline: none;
+  border-color: #5DADE2;
+}
+
+.send-to-message {
+  display: block;
+  font-size: 14px;
+  color: #888;
+}
+
+.button-send-home {
+  background-color: #007bff;
+  color: #fff;
+  font-size: 20px;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  margin-top: 20px;
+  margin-right: 10px;
+  width: 90%;
+  transition: all 0.3s ease;
+}
+
+.button-send-home:hover {
+  background-color: #0056b3;
+}
+
+.button-send-home:active {
+  background-color: #007bff;
+  transform: translateY(2px);
+}
+
+/*TRANSACTIONS.HTML*/
+
+.transactions {
+  margin-top: 50px;
+}
+
+.transactions-title {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+}
+
+.transactions-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.transactions-table th,
+.transactions-table td {
+  padding: 8px;
+  text-align: left;
+}
+
+.transactions-table th {
+  background-color: #333;
+  color: #fff;
+}
+
+.transactions-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.transactions-table tbody tr:hover {
+  background-color: #ddd;
+}
+
+/*CONFIG.HTML*/
+.config-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  max-width: 500px;
+  }
+  
+  .config-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-right: 1.5rem;
+  }
+  
+  .config-input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  }
+  
+  .config-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  }
+  
+  .switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  margin-right: 10px;
+  }
+  
+  .switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  }
+  
+  .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 34px;
+  user-select: none;
+  }
+  
+  .slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: #fff;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 50%;
+  }
+  
+  input:checked + .slider {
+  background-color: #007bff;
+  }
+  
+  input:focus + .slider:before {
+  -webkit-box-shadow: 0 0 1px #007bff;
+  box-shadow: 0 0 1px #007bff;
+  }
+  
+  input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+  }
+  
+  .color-picker {
+  width: 200px;
+  height: 200px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin: 10px 0;
+  margin: 0 auto;
+  display: block;
+  }
+  
+  .button-delete {
+  background-color: #dc3545;
+  border: none;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0 auto;
+  display: block;
+  max-width: 500px;
+  }
+  
+  .button-save {
+  background-color: #007bff;
+  border: none;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0 auto;
+  display: block;
+  max-width: 500px;
+  }
+
+  .lastDiv {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  .lastButton{
+    margin-top: 0;
+  }

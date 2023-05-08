@@ -1,0 +1,31 @@
+<!-- sendMoney.html -->
+{% extends 'layout.html' %}
+
+{% block content %}
+  <div class="content-home">
+    <h1 class="title-home">Enviar Dinero de Forma Segura</h1>
+    <p class="subtitle-home">Transfiere algo de dinero a alguien!</p>
+    <div class="send-to">
+      <label for="sender-input" class="send-to-label">Remitente</label>
+      <input type="text" id="sender-input" class="send-to-input" placeholder="" disabled>
+      <div class="send-to-message">Esta es tu dirección de cartera, los fondos se transferiran de forma segura a través de tu nombre.</div>
+    </div>
+
+    <div class="send-to">
+      <label for="name-input" class="send-to-label">Enviar a:</label>
+      <input type="text" id="name-input" class="send-to-input" placeholder="Introduce el nombre de usuario o la direccion de cartera">
+      <div class="send-to-message">Asegurate de confirmar la dirección de cartera. Recuerda que el formato de cartera es XX00000000</div>
+    </div>
+
+    <div class="send-to">
+      <label for="name-input" class="send-to-label">Importe</label>
+      <input type="text" id="amount-input" class="send-to-input" placeholder="Introduce la cantidad que quieres enviar">
+      <div class="send-to-message">Asegurate de tener el saldo suficiente. </div>
+    </div>
+
+    <button class="button-send-home"  onclick="sendMoney()">Enviar Transacción!</button>
+    
+  </div>
+  <script type="module" src="{{ url_for('static', filename='js/sendMoney.js') }}"></script>
+
+{% endblock %}

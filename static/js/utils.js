@@ -1,3 +1,21 @@
+export function showErrorPopup(message) {
+    const popup = document.getElementById('error-popup');
+    popup.textContent = message;
+    popup.style.display = 'block';
+    setTimeout(() => {
+      popup.style.display = 'none';
+    }, 3000); // Ocultar el popup después de 3 segundos (3000 milisegundos)
+}
+
+export function showSuccessPopup(message) {
+    const popup = document.getElementById('success-popup');
+    popup.textContent = message;
+    popup.style.display = 'block';
+    setTimeout(() => {
+      popup.style.display = 'none';
+    }, 3000); // Ocultar el popup después de 3 segundos (3000 milisegundos)
+  }
+
 // Creamos una matriz global para almacenar los intervalos activos
 var intervalosActivos = [];
 
@@ -17,3 +35,4 @@ export function detenerTodosLosIntervalos() {
   // limpiar la matriz de intervalosActivos 
   intervalosActivos = [];
 }
+

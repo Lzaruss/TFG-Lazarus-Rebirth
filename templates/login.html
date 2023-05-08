@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Lazarus Rebirth</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='login.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}">
   </head>
   <body>
     <div class="login-container">
@@ -15,6 +15,7 @@
         <input type="password" id="password" name="password" required>
 
         <input type="submit" value="Acceder">
+        <button onclick="window.location.href='/recovery.html'" class="register-button">Si te has olvidado de tu contraseña, haz click aqui!</button>
       </form>
 
     {% if error %}

@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1 class="title-home">Configuración</h1>
+<h2 class="subtitle-home">Personaliza tu experiencia</h2>
+
+<div class="config-item">
+  <h3 class="config-title">Cambiar color de la página</h3>
+  <input type="color" class="config-input" id="pickup_color">
+</div>
+
+<div class="config-item">
+  <h3 class="config-title">Borrar historial de transacciones</h3>
+  <button class="config-button" onclick="deleteTransactions()">Borrar</button>
+</div>
+
+<div class="config-item">
+  <h3 class="config-title">Cambiar contraseña</h3>
+  <button class="config-button" onclick="changePassword()">Cambiar</button>
+</div>
+
+<div class="config-item">
+  <h3 class="config-title">Activar 2FA</h3>
+  <label class="switch">
+    <input type="checkbox" id="twofa" {% if config["twofa"] == 1 %}checked{% endif %}>
+
+    <span class="slider round"></span>
+  </label>
+</div>
+
+<div class="config-item">
+  <h3 class="config-title">Activar alertas de transacciones</h3>
+  <label class="switch">
+    <input type="checkbox" id="notify" {% if config["notifys"] == 1 %}checked{% endif %}>
+    <span class="slider round"></span>
+  </label>
+</div>
+
+<button class="button-send-home" onclick="saveSettings()">Guardar</button>
+<script type="module" src="{{ url_for('static', filename='js/settings.js') }}"></script>
+
+{% endblock %}

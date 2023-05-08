@@ -1,0 +1,35 @@
+<!-- requestMoney.html -->
+{% extends 'layout.html' %}
+
+{% block content %}
+  <div class="content-home">
+    <h1 class="title-home">Solicita Dinero</h1>
+    <p class="subtitle-home">Solicita algo de dinero a un amigo moroso!</p>
+    <div class="send-to">
+      <label for="sender-input" class="send-to-label">Remitente</label>
+      <input type="text" id="sender-input" class="send-to-input" placeholder="" disabled>
+      <div class="send-to-message">Esta es tu dirección de cartera, los fondos se transferiran de forma segura a tu dirección cartera.</div>
+    </div>
+
+    <div class="send-to">
+      <label for="name-input" class="send-to-label">Solicitar a:</label>
+      <input type="text" id="name-input" class="send-to-input" placeholder="Introduce el nombre de usuario o la direccion de cartera">
+      <div class="send-to-message">Asegurate de confirmar la dirección de cartera. Recuerda que el formato de cartera es XX00000000</div>
+    </div>
+
+    <div class="send-to">
+      <label for="name-input" class="send-to-label">Importe</label>
+      <input type="text" id="amount-input" class="send-to-input" placeholder="Introduce la cantidad que quieres enviar">
+      <div class="send-to-message">No te pases solicitando dinero!</div>
+    </div>
+
+    <div class="send-to lastDiv">
+      <label for="name-input" class="send-to-label">Mensaje</label>
+      <input type="text" id="message-input" class="send-to-input" placeholder="Introduce un mensaje para tu amigo">
+    </div>
+
+    <button class="button-send-home lastButton" onclick="sendNotify()">Solicitar Transacción!</button>
+  </div>
+  <script type="module" src="{{ url_for('static', filename='js/receiveMoney.js') }}"></script>
+
+{% endblock %}
