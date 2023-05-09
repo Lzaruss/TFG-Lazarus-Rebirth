@@ -146,7 +146,7 @@ def configuracion():
 
 # API
 
-@app.route("/saldo", methods=["GET"], )
+@app.route("/saldo", methods=["GET"])
 def saldo():
     try:
         return {"saldo" : str(ddbb.getBalance(ddbb.getUser(session['user'])))}
@@ -166,14 +166,15 @@ def sendBalance():
     if request.method == "POST":
         userTo  = request.json.get("receiver")
         balance = request.json.get("amount")
-        if balance <= 0:
-            return {"error": "La cantidad debe ser mayor que 0"}
+
         userFrom = ddbb.getUser(session['user'])
 
         if not ddbb.checkUser(userTo) and not ddbb.checkWallet(userTo): 
             return {"error": "El usuario no existe"}
 
         try:
+            if int(balance) <= 0:
+                return {"error": "La cantidad debe ser mayor que 0"}
             if not ddbb.checkBalance(userFrom, int(balance)):
                 return {"error": "No tienes suficiente saldo para realizar la transacción!"}
             if ddbb.sendBalance(userFrom, userTo, int(balance)):
