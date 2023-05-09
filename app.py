@@ -6,9 +6,14 @@ import os
 
 app = Flask(__name__)
 
-path = os.path.join(os.getcwd(), 'config.json')
-with open(path) as config_file:
-    config = json.load(config_file)
+try:
+    path = "/home/Lzarusss/config.json" # ruta absoluta en la maquina virtual
+    with open(path) as config_file:
+        config = json.load(config_file)
+except FileNotFoundError:
+    path = os.path.join(os.getcwd(), 'config.json') # ruta relativa en la maquina local
+    with open(path) as config_file:
+        config = json.load(config_file)
 firebase = pyrebase.initialize_app(config) 
 auth = firebase.auth()
 app.secret_key = 'secret_key'
