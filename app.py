@@ -7,7 +7,7 @@ import os
 app = Flask(__name__)
 
 try:
-    path = "/home/Lzarusss/config.json" # ruta absoluta en la maquina virtual
+    path = "/home/Lzarusss/TFG/config.json" # ruta absoluta en la maquina virtual
     with open(path) as config_file:
         config = json.load(config_file)
 except FileNotFoundError:
