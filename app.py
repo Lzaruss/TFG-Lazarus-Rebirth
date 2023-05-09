@@ -2,10 +2,12 @@ from flask import Flask, session, render_template, request, redirect
 import pyrebase 
 import dbFunctions as ddbb
 import json
+import os
 
 app = Flask(__name__)
 
-with open('config.json') as config_file:
+path = os.path.join(os.getcwd(), 'config.json')
+with open(path) as config_file:
     config = json.load(config_file)
 firebase = pyrebase.initialize_app(config) 
 auth = firebase.auth()
@@ -260,5 +262,4 @@ def changePassword():
 
 if __name__ == '__main__':
     print("Server started")
-
     app.run(port=1111)

@@ -125,14 +125,16 @@ def addTransaction(user : str, TO : str, AMOUNT : int):
     if checkUser(user):
         db.child(user).child("transactions").push({'FROM': user, 'TO': TO, 'AMOUNT': AMOUNT, 'TIME': getActualHour()})
 
-def getTransactions(user : str):
+def getTransactions(user: str):
     if checkUser(user):
-        return list(db.child(user).child("transactions").get().val().values())
+        transactions = db.child(user).child("transactions").get().val().values()
+        return {i: transaction for i, transaction in enumerate(transactions)}
     return None
 
-def getNotifications(user : str):
+def getNotifications(user: str):
     if checkUser(user):
-        return list(db.child(user).child("notifications").get().val().values())
+        notifications = db.child(user).child("notifications").get().val().values()
+        return {i: notification for i, notification in enumerate(notifications)}
     return None
 
 def deleteNotification(user:str, pos:int):
