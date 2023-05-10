@@ -3,17 +3,17 @@ import pyrebase
 import random
 import string
 import datetime
+import json
+import os
 
-config = {
-    'apiKey': "AIzaSyAyOFO875u8wYYbFbjpyZBDzAEuUQtICYM",
-    'authDomain': "tfg-launcher.firebaseapp.com",
-    'databaseURL': "https://tfg-launcher-default-rtdb.firebaseio.com",
-    'projectId': "tfg-launcher",
-    'storageBucket': "tfg-launcher.appspot.com",
-    'messagingSenderId': "364319578115",
-    'appId': "1:364319578115:web:1b344ae37a3e6926a25636",
-    'measurementId': "G-2GGEX0L1N6",
-}
+try:
+    path = "/home/Lzarusss/TFG/config.json" # ruta absoluta en la maquina virtual
+    with open(path) as config_file:
+        config = json.load(config_file)
+except FileNotFoundError:
+    path = os.path.join(os.getcwd(), 'config.json') # ruta relativa en la maquina local
+    with open(path) as config_file:
+        config = json.load(config_file)
 
 firebase = pyrebase.initialize_app(config)
 db = firebase.database()
@@ -178,4 +178,40 @@ def saveSettings(user:str, settings:dict):
     if checkUser(user):
         db.child(user).child("config").set(settings)
 
-#print(saveSettings("Lzaruss", {"color": "#222", "2fa": "0", "notifys": "0"}))
+def getFriends(user:str):
+    try:
+        if checkUser(user):
+            return dict(db.child(user).child("friends").get().val())
+    except Exception as e:
+        return None
+
+def getMessages(user:str, friend:str):
+    try:
+        if checkUser(user):
+            return db.child(user).child("friends").child(friend).child("messages").get().val()
+    except Exception as e:
+        return None
+    
+def addFriend(user:str, friend:str):
+    try:
+        if checkUser(user) and checkUser(friend):
+            wallet = getWallet(friend)
+            db.child(user).child("friends").child(friend).set({
+                "messages": [{"sender":"", "timestamp":"", "message":""}],
+                "wallet": wallet
+            })
+        return True
+    except Exception as e:
+        return False
+
+def addMessage(user:str, friend:str, message:str, timestamp:str):
+    try:
+        if checkUser(user) and checkUser(friend):
+            db.child(user).child("friends").child(friend).child("messages").push({"sender":user, "timestamp":timestamp, "message":message})
+            db.child(friend).child("friends").child(user).child("messages").push({"sender":user, "timestamp":timestamp, "message":message})
+        return True
+    except Exception as e:
+        return False
+
+#print(addMessage("Lzaruss", "Gandalf", "Esto es una prueba", getActualHour()))
+#print(getMessages("Lzaruss", "Gandalf"))

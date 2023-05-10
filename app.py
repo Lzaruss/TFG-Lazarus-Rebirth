@@ -70,7 +70,7 @@ def registrar():
             return render_template('registrar.html', error="El nombre de usuario ya está en uso")
         try:
             user = auth.create_user_with_email_and_password(email, password)
-            ddbb.pushDataToUsers(username, {"email": email, "username": username, "balance": balance, "wallet": ddbb.createWallet(), "notifications": "", "transactions": "", "config":{"color": "#222", "hover_color":"#333", "twofa": "0", "notifys": "0"}})
+            ddbb.pushDataToUsers(username, {"email": email, "username": username, "balance": balance, "wallet": ddbb.createWallet(), "notifications": "", "transactions": "", "config":{"color": "#222", "hover_color":"#333", "twofa": "0", "notifys": "0"}, "friends":{}})
             return render_template('registrar.html', usuario=True)
         except Exception as e:
             
@@ -140,6 +140,14 @@ def configuracion():
     if('user' in session):
         settings = ddbb.getSettings(ddbb.getUser(session['user']))
         return render_template('settings.html', config=settings)
+    else:
+        return redirect("/")
+    
+@app.route("/friends", methods=["GET", "POST"])
+def friends():
+    if('user' in session):
+        settings = ddbb.getSettings(ddbb.getUser(session['user']))
+        return render_template('friends.html', config=settings)
     else:
         return redirect("/")
 
@@ -265,6 +273,39 @@ def changePassword():
             return {"status": "success", "message": "Se ha enviado correctamente!"}
         except:
             return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
+        
+@app.route("/getFriends")
+def getFriends():
+    try:
+        return {"response" : ddbb.getFriends(ddbb.getUser(session['user']))}
+    except:
+        return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
+    
+@app.route("/getMessages/<friend_name>")
+def getMessages(friend_name):
+    try:
+        return {"response" : ddbb.getMessages(ddbb.getUser(session['user']), friend_name)}
+    except:
+        return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
+
+@app.route("/sendMessage", methods=["POST"])
+def sendMessage():
+    if request.method == "POST":
+        try:
+            ddbb.addMessage(ddbb.getUser(session['user']), request.json['friend'], request.json['message'], request.json['timestamp'])
+            return {"status": "success", "message": "Se ha enviado correctamente!"}
+        except:
+            return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
+
+@app.route("/addFriend", methods=["POST"])
+def addFriend():
+    if request.method == "POST":
+        try:
+            ddbb.addFriend(ddbb.getUser(session['user']), request.json['friend'])
+            return {"status": "success", "message": "Se ha enviado la solicitud correctamente!"}
+        except:
+            return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
+
 
 if __name__ == '__main__':
     print("Server started")
