@@ -116,7 +116,7 @@ function getCurrentTime() {
 
 function sendMessage(){
     const actualTime = getCurrentTime();
-    const inputMessage = document.getElementById('sendMessage').value;
+    const inputMessage = document.getElementById('sendMessage');
     const friendName = document.getElementById('amigo-seleccionado').textContent;
     fetch('/sendMessage', {
         method: 'POST',
@@ -125,7 +125,7 @@ function sendMessage(){
         },
         body: JSON.stringify({
             friend: friendName,
-            message: inputMessage,
+            message: inputMessage.value,
             timestamp: actualTime
         })
     })
@@ -140,7 +140,7 @@ function sendMessage(){
                 
                 const pContent = document.createElement('p');
                 pContent.classList.add('contentChat');
-                pContent.textContent = inputMessage;
+                pContent.textContent = inputMessage.value;
                 p.appendChild(pContent);
                 
                 const pTimestamp = document.createElement('p');
@@ -149,30 +149,34 @@ function sendMessage(){
                 p.appendChild(pTimestamp);
                 
                 chatMessages.appendChild(p);
+                inputMessage.value = '';
             }
     });
 }
 
+
 function searchContact(){
-    const friendName = document.getElementById('searchContact').value;
+    const friendName = document.getElementById('searchContact');
     fetch('/addFriend', {
         method: 'POST',
         headers: {
         'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            friend: friendName,
+            friend: friendName.value,
         })
     }).then(response => response.json()).then(data => {
         if (data.error) {
-            showErrorPopup("No se ha podido enviar la solicitud");
+            showErrorPopup(data.error);
         } else {
             showSuccessPopup("Usuario añadido correctamente!");
         }
+        friendName.value = '';
     });
 }
 
-
+document.getElementById('searchContact').addEventListener('keydown', function(event) {if (event.keyCode === 13)searchContact();});
+document.getElementById('sendMessage').addEventListener('keydown', function(event) {if (event.keyCode === 13)sendMessage();});
 
 window.searchContact = searchContact;
 window.sendMessage = sendMessage;

@@ -70,9 +70,12 @@ def getUserByWallet(wallet : str):
 # obtener el usuario pasandole el email
 def getUser(email : str):
     users = db.get()
-    for user in users.each():
-        if user.val()["email"] == email:
-            return user.key()
+    try:
+        for user in users.each():
+            if user.val()["email"] == email:
+                return user.key()
+    except TypeError:
+        return None
     return None
 
 # Comprobar que la wallet que le pase por parametro, no la contiene ningun usuario en sus datos de la base de datos
@@ -192,6 +195,16 @@ def getMessages(user:str, friend:str):
     except Exception as e:
         return None
     
+# Haz una funcion que recoja la wallet del amigo a través del nodo de amigos
+def getWalletOfFriend(user:str, friend:str):
+    try:
+        if checkUser(user) and checkUser(friend):
+            return db.child(user).child("friends").child(friend).child("wallet").get().val()
+        return None
+    except Exception as e:
+        return None
+    
+
 def addFriend(user:str, friend:str):
     try:
         if checkUser(user) and checkUser(friend):
@@ -200,18 +213,29 @@ def addFriend(user:str, friend:str):
                 "messages": [{"sender":"", "timestamp":"", "message":""}],
                 "wallet": wallet
             })
+            return True
+        return False
+    except Exception as e:
+        return False
+    
+def addWalletToFriend(user:str, wallet:str, fromFriend:str):
+    try:
+        if checkUser(user) and checkUser(fromFriend):
+            db.child(user).child("friends").child(fromFriend).child("wallet").set(wallet)
         return True
     except Exception as e:
         return False
+
 
 def addMessage(user:str, friend:str, message:str, timestamp:str):
     try:
         if checkUser(user) and checkUser(friend):
             db.child(user).child("friends").child(friend).child("messages").push({"sender":user, "timestamp":timestamp, "message":message})
-            db.child(friend).child("friends").child(user).child("messages").push({"sender":user, "timestamp":timestamp, "message":message})
+            if getWalletOfFriend(friend, user) is None:
+                db.child(friend).child("friends").child(user).child("messages").push({"sender":user, "timestamp":timestamp, "message":message})
+                addWalletToFriend(friend, getWallet(user), user)
+            else:
+                db.child(friend).child("friends").child(user).child("messages").push({"sender":user, "timestamp":timestamp, "message":message})
         return True
     except Exception as e:
         return False
-
-#print(addMessage("Lzaruss", "Gandalf", "Esto es una prueba", getActualHour()))
-#print(getMessages("Lzaruss", "Gandalf"))

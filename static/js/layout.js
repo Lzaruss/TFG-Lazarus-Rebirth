@@ -4,6 +4,8 @@ import('./utils.js').then((module) => {
 
 const popup = document.querySelector('.popup');
 const badge = document.querySelector('.badge');
+
+
 function notifyInterval(){
   fetch('/getNotifications')
   .then(response => response.json())
@@ -24,5 +26,24 @@ function notifyInterval(){
     }
   });
 }
+const twofa = document.getElementById('twofa').className
+
+if(twofa === '1'){
+  window.addEventListener('beforeunload', function(event) {
+    // Hacer petición para cerrar la sesión del usuario
+    fetch('/logout')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error al cerrar la sesión');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  });
+}
 notifyInterval()
-setInterval(notifyInterval, 120000)
+
+const notifys = document.getElementById('twofa').className
+if(notifys === '0')
+  setInterval(notifyInterval, 1000)
