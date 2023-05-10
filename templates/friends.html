@@ -4,7 +4,8 @@
 <h1 class="title-home">Contactos</h1>
 <p class="subtitle-home">Aqui podrás ver todos los contactos que hayas agregado!</p>
 <div class="search-container">
-  <input type="text" placeholder="Buscar amigos">
+  <input id="searchContact" type="text" placeholder="Buscar amigos">
+  <button onclick="searchContact()" type="submit">Enviar solicitud!</button>
 </div>
 <div class="friends-container">
     <div class="friends-list">
@@ -29,6 +30,6 @@
 </div>
 
 
-<script src="{{ url_for('static', filename='js/friends.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/friends.js') }}"></script>
 
 {% endblock %}

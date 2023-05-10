@@ -292,8 +292,11 @@ def getMessages(friend_name):
 def sendMessage():
     if request.method == "POST":
         try:
-            ddbb.addMessage(ddbb.getUser(session['user']), request.json['friend'], request.json['message'], request.json['timestamp'])
-            return {"status": "success", "message": "Se ha enviado correctamente!"}
+            if request.json['message'] == "":
+                return {"error": "No puedes enviar un mensaje vacío!"}
+            if ddbb.addMessage(ddbb.getUser(session['user']), request.json['friend'], request.json['message'], request.json['timestamp']):
+                return {"status": "success", "message": "Se ha enviado correctamente!"}
+            return {"error": "No se ha podido enviar el mensaje"}
         except:
             return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 
@@ -301,8 +304,9 @@ def sendMessage():
 def addFriend():
     if request.method == "POST":
         try:
-            ddbb.addFriend(ddbb.getUser(session['user']), request.json['friend'])
-            return {"status": "success", "message": "Se ha enviado la solicitud correctamente!"}
+            if ddbb.addFriend(ddbb.getUser(session['user']), request.json['friend']):
+                return {"status": "success", "message": "Se ha enviado la solicitud correctamente!"}
+            return {"error": "No se ha encontrado al usuario!"}
         except:
             return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 

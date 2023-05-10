@@ -1,3 +1,5 @@
+import { showErrorPopup, showSuccessPopup } from './utils.js';
+
 function mostrarChat(friendName) {
     const chatHistory = document.getElementById('container');
 
@@ -128,21 +130,50 @@ function sendMessage(){
         })
     })
         .then(response => response.json()).then(data => {
-            const chatMessages = document.querySelector('.chat-messages');
-            const p = document.createElement('p');
-            p.classList.add('message');
-            p.classList.add('my-message');
-            
-            const pContent = document.createElement('p');
-            pContent.classList.add('contentChat');
-            pContent.textContent = inputMessage;
-            p.appendChild(pContent);
-            
-            const pTimestamp = document.createElement('p');
-            pTimestamp.classList.add('timestamp');
-            pTimestamp.textContent = getCurrentTime();
-            p.appendChild(pTimestamp);
-            
-            chatMessages.appendChild(p);
+            if (data.error) {
+                showErrorPopup("Ha ocurrido un error al enviar el mensaje");
+            }else{
+                const chatMessages = document.querySelector('.chat-messages');
+                const p = document.createElement('p');
+                p.classList.add('message');
+                p.classList.add('my-message');
+                
+                const pContent = document.createElement('p');
+                pContent.classList.add('contentChat');
+                pContent.textContent = inputMessage;
+                p.appendChild(pContent);
+                
+                const pTimestamp = document.createElement('p');
+                pTimestamp.classList.add('timestamp');
+                pTimestamp.textContent = getCurrentTime();
+                p.appendChild(pTimestamp);
+                
+                chatMessages.appendChild(p);
+            }
     });
 }
+
+function searchContact(){
+    const friendName = document.getElementById('searchContact').value;
+    fetch('/addFriend', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            friend: friendName,
+        })
+    }).then(response => response.json()).then(data => {
+        if (data.error) {
+            showErrorPopup("No se ha podido enviar la solicitud");
+        } else {
+            showSuccessPopup("Usuario añadido correctamente!");
+        }
+    });
+}
+
+
+
+window.searchContact = searchContact;
+window.sendMessage = sendMessage;
+window.ocultarHistorial = ocultarHistorial;

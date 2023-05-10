@@ -708,3 +708,16 @@ body {
   border-bottom: 2px solid #2E8B57;
   }
 
+  .search-container button[type="submit"] {
+    margin-top: 5px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .search-container button[type="submit"]:hover {
+    background-color: #3e8e41;
+  }
