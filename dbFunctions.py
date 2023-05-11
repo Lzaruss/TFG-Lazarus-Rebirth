@@ -26,6 +26,11 @@ def checkPassword(password):
     regex = r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$'
     return re.search(regex, password)
 
+def checkUsername(username):
+    # Valida el usuario pasado por parametro para que tenga al menos 4 caracteres y no contenga caracteres especiales ni espacios
+    regex = r'^[a-zA-Z0-9]{4,}$'
+    return re.search(regex, username)
+
 def getActualHour():
     fecha_hora_actual = datetime.datetime.now()
 

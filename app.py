@@ -59,6 +59,9 @@ def registrar():
     if request.method == 'POST':
         email = request.form.get("email")
         username = request.form.get("username")
+
+        if ddbb.checkUsername(username) is None:
+            return render_template('registrar.html', error="El nombre de usuario no es válido (Debe contener al menos 4 caracteres y no puede contener espacios ni caracteres especiales)")
         password = request.form.get("password")
         balance = 5
 
@@ -69,7 +72,7 @@ def registrar():
         if ddbb.checkUser(username):
             return render_template('registrar.html', error="El nombre de usuario ya está en uso")
         try:
-            user = auth.create_user_with_email_and_password(email, password)
+            auth.create_user_with_email_and_password(email, password)
             ddbb.pushDataToUsers(username, {"email": email, "username": username, "balance": balance, "wallet": ddbb.createWallet(), "notifications": "", "transactions": "", "config":{"color": "#222", "hover_color":"#333", "twofa": "1", "notifys": "0"}, "friends":{}})
             return render_template('registrar.html', usuario=True)
         except Exception as e:
