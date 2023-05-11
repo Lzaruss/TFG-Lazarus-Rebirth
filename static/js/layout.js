@@ -30,20 +30,39 @@ const twofa = document.getElementById('twofa').className
 
 if(twofa === '1'){
   window.addEventListener('beforeunload', function(event) {
-    // Hacer petición para cerrar la sesión del usuario
-    fetch('/logout')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Error al cerrar la sesión');
-        }
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    const targetUrl = new URL(event.target.URL);
+    const currentUrl = new URL(window.location.href);
+    // Comparar las URLs
+    if (targetUrl.origin !== currentUrl.origin) {
+      // Si la URL de destino no pertenece a tu sitio web, hacer la petición para cerrar sesión
+      fetch('/logout')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Error al cerrar la sesión');
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
   });
+  window.addEventListener('unload', function(event) {
+
+      fetch('/logout')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Error al cerrar la sesión');
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    
+  });
+  
 }
 notifyInterval()
 
-const notifys = document.getElementById('twofa').className
+const notifys = document.getElementById('notifys').className
 if(notifys === '0')
-  setInterval(notifyInterval, 1000)
+  setInterval(notifyInterval, 10000)
