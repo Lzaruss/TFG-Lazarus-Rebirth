@@ -289,3 +289,31 @@ def deleteAccount(user:str):
         return False
     except Exception as e:
         return False
+
+def iniciar_sesion(email, password):
+    try:
+        auth.sign_in_with_email_and_password(email, password)
+        return True
+    except Exception as e:
+        return False
+
+def registrar_usuario(email, password):
+    try:
+        return auth.create_user_with_email_and_password(email, password)
+    except Exception as e:
+        return False
+    
+def enviar_email_verificacion():
+    try:
+        user = auth.current_user
+        user.send_email_verification()
+        return True
+    except Exception as e:
+        return False
+    
+def enviar_email_contrasena(email):
+    try:
+        auth.send_password_reset_email(email)
+        return True
+    except Exception as e:
+        return False

@@ -6,16 +6,6 @@ import os
 
 app = Flask(__name__)
 
-try:
-    path = "/home/Lzarusss/TFG/config.json" # ruta absoluta en la maquina virtual
-    with open(path) as config_file:
-        config = json.load(config_file)
-except FileNotFoundError:
-    path = os.path.join(os.getcwd(), 'config.json') # ruta relativa en la maquina local
-    with open(path) as config_file:
-        config = json.load(config_file)
-firebase = pyrebase.initialize_app(config) 
-auth = firebase.auth()
 app.secret_key = 'secret_key'
 
 @app.route('/', methods=["POST", "GET"])
@@ -28,12 +18,11 @@ def index():
         email = request.form.get("email")
         password = request.form.get("password")
 
-        try:
-            auth.sign_in_with_email_and_password(email, password)
+        if ddbb.iniciar_sesion(email, password):
             session['user'] = email
             settings = ddbb.getSettings(ddbb.getUser(session['user']))
             return render_template('sendMoney.html', config=settings)
-        except Exception as e:
+        else:
             return render_template('login.html', error=True)
 
     return render_template('login.html')
@@ -42,15 +31,10 @@ def index():
 def recovery():
     if request.method == 'POST':
         email = request.form.get("email")
-        try:
-            auth.send_password_reset_email(email)
+        if ddbb.enviar_email_contrasena(email):
             return render_template('recovery.html', enviado=True)
-        except Exception as e:
-            dataError = json.loads(e.args[1])
-
-            if dataError["error"]["message"] == 'EMAIL_NOT_FOUND':
-                return render_template('recovery.html', error="El correo electrónico no está registrado")
-            return render_template('recovery.html', error=e)
+        else:
+            return render_template('recovery.html', error="El correo electrónico no está registrado")
     return render_template('recovery.html')
 
 @app.route("/registrar", methods=["POST", "GET"])
@@ -72,8 +56,9 @@ def registrar():
         if ddbb.checkUser(username):
             return render_template('registrar.html', error="El nombre de usuario ya está en uso")
         try:
-            user = auth.create_user_with_email_and_password(email, password)
-            print(user)
+            user = ddbb.registrar_usuario(email, password)
+            if user is False:
+                return render_template('registrar.html', error="Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador")
             ddbb.pushDataToUsers(username, {"uid": user['idToken'], "email": email, "username": user['email'], "balance": balance, "wallet": ddbb.createWallet(), "notifications": "", "transactions": "", "config":{"color": "#222", "hover_color":"#333", "twofa": "1", "notifys": "0"}, "friends":{}})
             return render_template('registrar.html', usuario=True)
         except Exception as e:
@@ -111,7 +96,6 @@ def logout():
 def send():
     if('user' in session):
         settings = ddbb.getSettings(ddbb.getUser(session['user']))
-        print(session)
         return render_template('sendMoney.html', config=settings)
     else:
         return redirect("/")
@@ -273,12 +257,11 @@ def saveSettings():
 @app.route("/changePassword", methods=["POST"]) 
 def changePassword():
     if request.method == "POST":
-        try:
-            auth.send_password_reset_email(session['user'], callback=None)
-            return {"status": "success", "message": "Se ha enviado correctamente!"}
-        except:
+        if ddbb.enviar_email_contrasena(session['user']):
+            return {"status": "success", "message": "Se ha enviado un correo a tu cuenta de correo electrónico!"}
+        else:
             return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
-        
+    
 @app.route("/getFriends")
 def getFriends():
     try:
