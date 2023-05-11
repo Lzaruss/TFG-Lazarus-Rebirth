@@ -214,9 +214,14 @@ def addFriend(user:str, friend:str):
     try:
         if checkUser(user) and checkUser(friend):
             wallet = getWallet(friend)
+            userWallet = getWallet(user)
             db.child(user).child("friends").child(friend).set({
                 "messages": [{"sender":"", "timestamp":"", "message":""}],
                 "wallet": wallet
+            })
+            db.child(friend).child("friends").child(user).set({
+                "messages": [{"sender":"", "timestamp":"", "message":""}],
+                "wallet": userWallet
             })
             return True
         return False
@@ -248,9 +253,19 @@ def addMessage(user:str, friend:str, message:str, timestamp:str):
 def deleteFriend(user:str, friend:str):
     try:
         if checkUser(user) and checkUser(friend):
-            db.child(user).child("friends").child(friend).remove()
-            db.child(friend).child("friends").child(user).remove()
-        return True
+            if areTheyFriends(user, friend):
+                db.child(user).child("friends").child(friend).remove()
+                db.child(friend).child("friends").child(user).remove()
+                return True
+        return False
     except Exception as e:
         return False
     
+def areTheyFriends(user:str, friend:str):
+    try:
+        if checkUser(user) and checkUser(friend):
+            if db.child(user).child("friends").child(friend).get().val() is not None and db.child(friend).child("friends").child(user).get().val() is not None:
+                return True
+        return False
+    except Exception as e:
+        return False
