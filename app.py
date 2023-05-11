@@ -38,7 +38,7 @@ def index():
 
     return render_template('login.html')
 
-@app.route("/recovery.html", methods=["POST", "GET"])
+@app.route("/recovery", methods=["POST", "GET"])
 def recovery():
     if request.method == 'POST':
         email = request.form.get("email")
@@ -53,7 +53,7 @@ def recovery():
             return render_template('recovery.html', error=e)
     return render_template('recovery.html')
 
-@app.route("/registrar.html", methods=["POST", "GET"])
+@app.route("/registrar", methods=["POST", "GET"])
 def registrar():
     
     if request.method == 'POST':
@@ -72,8 +72,9 @@ def registrar():
         if ddbb.checkUser(username):
             return render_template('registrar.html', error="El nombre de usuario ya está en uso")
         try:
-            auth.create_user_with_email_and_password(email, password)
-            ddbb.pushDataToUsers(username, {"email": email, "username": username, "balance": balance, "wallet": ddbb.createWallet(), "notifications": "", "transactions": "", "config":{"color": "#222", "hover_color":"#333", "twofa": "1", "notifys": "0"}, "friends":{}})
+            user = auth.create_user_with_email_and_password(email, password)
+            print(user)
+            ddbb.pushDataToUsers(username, {"uid": user['idToken'], "email": email, "username": user['email'], "balance": balance, "wallet": ddbb.createWallet(), "notifications": "", "transactions": "", "config":{"color": "#222", "hover_color":"#333", "twofa": "1", "notifys": "0"}, "friends":{}})
             return render_template('registrar.html', usuario=True)
         except Exception as e:
             
@@ -110,6 +111,7 @@ def logout():
 def send():
     if('user' in session):
         settings = ddbb.getSettings(ddbb.getUser(session['user']))
+        print(session)
         return render_template('sendMoney.html', config=settings)
     else:
         return redirect("/")
@@ -323,7 +325,19 @@ def deleteFriend():
         except:
             return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
         
-
+@app.route("/deleteAccount", methods=["POST"])
+def deleteAccount():
+    if request.method == "POST":
+        try:
+            if ddbb.deleteAccount(ddbb.getUser(session['user'])):
+                try:
+                    session.pop('user')
+                except:
+                    pass
+                return {"status": "success", "message": "Se ha eliminado correctamente!"}
+            return {"error": "No se ha encontrado al usuario!"}
+        except:
+            return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 
 if __name__ == '__main__':
     print("Server started")

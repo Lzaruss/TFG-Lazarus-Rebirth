@@ -16,6 +16,7 @@ except FileNotFoundError:
         config = json.load(config_file)
 
 firebase = pyrebase.initialize_app(config)
+auth = firebase.auth()
 db = firebase.database()
 
 def checkEmail(email):
@@ -266,6 +267,25 @@ def areTheyFriends(user:str, friend:str):
         if checkUser(user) and checkUser(friend):
             if db.child(user).child("friends").child(friend).get().val() is not None and db.child(friend).child("friends").child(user).get().val() is not None:
                 return True
+        return False
+    except Exception as e:
+        return False
+
+def getUid(user:str):
+    try:
+        if checkUser(user):
+            return db.child(user).child("uid").get().val()
+        return None
+    except Exception as e:
+        return None
+
+def deleteAccount(user:str):
+    try:
+        if checkUser(user):
+            uid = getUid(user)
+            db.child(user).remove()
+            auth.delete_user_account(uid)
+            return True
         return False
     except Exception as e:
         return False

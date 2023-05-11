@@ -71,7 +71,25 @@ function changePassword(){
     })
 }
 
+function deleteAccount() {
+    fetch('/deleteAccount', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(response => response.json())
+    .then(data => {
+        if(data.status === "success"){
+            showSuccessPopup("Cuenta eliminada correctamente!");
+            window.location.href = "/";
+        }else{
+            showErrorPopup("No se ha podido eliminar la cuenta, inténtelo de nuevo más tarde");
+        }
+    })
+}
+
 
 window.saveSettings = saveSettings;
 window.deleteTransactions = deleteTransactions;
 window.changePassword = changePassword;
+window.deleteAccount = deleteAccount;
