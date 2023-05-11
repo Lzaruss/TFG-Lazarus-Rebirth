@@ -43,11 +43,19 @@ def registrar():
     if request.method == 'POST':
         email = request.form.get("email")
         username = request.form.get("username")
+        code = request.form.get("code-guest")
+        balance = 5
+
+        if ddbb.checkCode(code) is not None:
+            userGuest = ddbb.checkCodeInDB(code)
+            if userGuest is not False:
+                balance = 25
+                ddbb.changeBalance(userGuest, ddbb.getBalance(userGuest) + balance)
+                ddbb.updateUserGuest(userGuest)
 
         if ddbb.checkUsername(username) is None:
             return render_template('registrar.html', error="El nombre de usuario no es válido (Debe contener al menos 4 caracteres y no puede contener espacios ni caracteres especiales)")
         password = request.form.get("password")
-        balance = 5
 
         if ddbb.checkEmail(email) is None:
             return render_template('registrar.html', error="El correo electrónico no es válido")
@@ -59,7 +67,7 @@ def registrar():
             user = ddbb.registrar_usuario(email, password)
             if user is False:
                 return render_template('registrar.html', error="Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador")
-            ddbb.pushDataToUsers(username, {"uid": user['idToken'], "email": email, "username": user['email'], "balance": balance, "wallet": ddbb.createWallet(), "notifications": "", "transactions": "", "config":{"color": "#222", "hover_color":"#333", "twofa": "1", "notifys": "0"}, "friends":{}})
+            ddbb.pushDataToUsers(username, {"uid": user['idToken'], "email": user['email'], "username": username, "balance": balance, "wallet": ddbb.createWallet(), "notifications": "", "transactions": "", "config":{"color": "#222", "hover_color":"#333", "twofa": "1", "notifys": "0"}, "friends":{}, "code":ddbb.createCode(), "guest": "0"})
             return render_template('registrar.html', usuario=True)
         except Exception as e:
             

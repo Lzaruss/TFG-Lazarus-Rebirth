@@ -4,4 +4,6 @@ fetch('/getAccount').then(response => {response.json()
         document.getElementById("wallet-account").placeholder = data.account["wallet"];
         document.getElementById("email-account").placeholder = data.account["email"];
         document.getElementById("balance-account").placeholder = data.account["balance"] + "€";
+        document.getElementById("code-account").placeholder = data.account["code"] + "                   Usuarios invitados: " + data.account["guest"];
+        document.getElementById("code-link").textContent = "lzarusss.pythonanywhere.com/register?code=" + data.account["code"]; 
 });});

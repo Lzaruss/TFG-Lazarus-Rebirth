@@ -100,6 +100,33 @@ def createWallet():
     for i in range(8):
         wallet += random.choice(string.digits)
     return wallet
+
+# Crea un código de 12 caracteres con letras y números
+def createCode():
+    code = ""
+    for i in range(12):
+        code += random.choice(string.ascii_letters + string.digits)
+    return code
+
+def checkCode(code : str):
+    regex = r'^[a-zA-Z0-9]{12}$'
+    return re.search(regex, code)
+
+def checkCodeInDB(code : str):
+    users = db.get()
+    for user in users.each():
+        if user.val()["code"] == code:
+            return user.key()
+    return False
+
+# Funcion que recoge el valor que hay en guest y le suma uno más de lo que tenga
+def updateUserGuest(user:str):
+    try:
+        if checkUser(user):
+            guests = db.child(user).get().val()["guest"]
+            db.child(user).update({"guest": guests + 1})
+    except:
+        pass
 # Comprobar que la wallet es correcta, que empiece por dos letras y 8 números
 def checkWalletFormat(wallet : str):
     regex = r'^[a-zA-Z]{2}[0-9]{8}$'
@@ -173,7 +200,7 @@ def deleteTransaction(user:str):
 def getAccount(user:str):
     if checkUser(user):
         OrderedDict = db.child(user).get().val()
-        return {"username":OrderedDict["username"], "email":OrderedDict["email"], "balance":OrderedDict["balance"], "wallet":OrderedDict["wallet"]}
+        return {"username":OrderedDict["username"], "email":OrderedDict["email"], "balance":OrderedDict["balance"], "wallet":OrderedDict["wallet"], "code":OrderedDict["code"], "guest":OrderedDict["guest"]}
     return None
 
 
@@ -288,7 +315,7 @@ def deleteAccount(user:str):
             return True
         return False
     except Exception as e:
-        return False
+        return e
 
 def iniciar_sesion(email, password):
     try:
