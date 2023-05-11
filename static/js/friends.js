@@ -175,9 +175,31 @@ function searchContact(){
     });
 }
 
+function deleteFriend(){
+    const friendName = document.getElementById('amigo-seleccionado').textContent;
+    fetch('/deleteFriend', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            friend: friendName,
+        })
+    }).then(response => response.json()).then(data => {
+        if (data.error) {
+            showErrorPopup(data.error);
+        } else {
+            showSuccessPopup("Usuario eliminado correctamente!");
+            location.reload();
+        }
+    });
+}
+
+
 document.getElementById('searchContact').addEventListener('keydown', function(event) {if (event.keyCode === 13)searchContact();});
 document.getElementById('sendMessage').addEventListener('keydown', function(event) {if (event.keyCode === 13)sendMessage();});
 
 window.searchContact = searchContact;
 window.sendMessage = sendMessage;
 window.ocultarHistorial = ocultarHistorial;
+window.deleteFriend = deleteFriend;

@@ -244,3 +244,13 @@ def addMessage(user:str, friend:str, message:str, timestamp:str):
         return True
     except Exception as e:
         return False
+    
+def deleteFriend(user:str, friend:str):
+    try:
+        if checkUser(user) and checkUser(friend):
+            db.child(user).child("friends").child(friend).remove()
+            db.child(friend).child("friends").child(user).remove()
+        return True
+    except Exception as e:
+        return False
+    

@@ -313,6 +313,15 @@ def addFriend():
         except:
             return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 
+@app.route("/deleteFriend", methods=["POST"])
+def deleteFriend():
+    if request.method == "POST":
+        try:
+            if ddbb.deleteFriend(ddbb.getUser(session['user']), request.json['friend']):
+                return {"status": "success", "message": "Se ha eliminado correctamente!"}
+            return {"error": "No se ha encontrado al usuario!"}
+        except:
+            return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 
 if __name__ == '__main__':
     print("Server started")

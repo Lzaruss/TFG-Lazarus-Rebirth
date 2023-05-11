@@ -592,6 +592,14 @@ body {
   right: 10px;
 }
 
+.close-button:hover {
+  color: #333;
+}
+
+.deleteFriend {
+  right: 50%;
+}
+
 .chat-history {
   height: 300px;
   overflow-y: scroll;
