@@ -4,8 +4,7 @@ function mostrarChat(friendName) {
     const chatHistory = document.getElementById('container');
 
     if (chatHistory.style.display  === 'none') {
-        getMessages(friendName);
-        setInterval(getMessages, 10000)
+        setInterval(() => {getMessages(friendName)}, 10000)
     }else{
         chatHistory.style.display = 'none';
         detenerTodosLosIntervalos();
@@ -13,6 +12,8 @@ function mostrarChat(friendName) {
 }
 
 function getMessages(friendName){
+    const chatHistory = document.getElementById('container');
+    
     chatHistory.style.display = 'block';
     const chatHeader = document.getElementById('amigo-seleccionado');
     const chatMessages = document.querySelector('.chat-messages');
