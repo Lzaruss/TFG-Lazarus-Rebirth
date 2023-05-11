@@ -30,7 +30,11 @@
         <div class="popup">
         </div>
       </div>
+      {% if config %}
       <div class="menu" style="background-color: var(--menu-background);">
+      {% else %}
+      <div class="menu">
+      {% endif %}
         <a href="/account"><img src="{{ url_for('static', filename='img/account.png') }}">Perfil</a>
         <a href="/transactions"><img src="{{ url_for('static', filename='img/transaction.png') }}">Transacciones</a>
         <a href="/send"><img src="{{ url_for('static', filename='img/sendMoney.png') }}">Enviar Dinero</a>
