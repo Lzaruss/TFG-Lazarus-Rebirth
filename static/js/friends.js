@@ -1,57 +1,62 @@
-import { showErrorPopup, showSuccessPopup } from './utils.js';
+import { showErrorPopup, showSuccessPopup, detenerTodosLosIntervalos } from './utils.js';
 
 function mostrarChat(friendName) {
     const chatHistory = document.getElementById('container');
 
     if (chatHistory.style.display  === 'none') {
-        chatHistory.style.display = 'block';
-        const chatHeader = document.getElementById('amigo-seleccionado');
-        const chatMessages = document.querySelector('.chat-messages');
-        // Obtener los mensajes del amigo
-        fetch(`/getMessages/${friendName}`)
-        .then(response => response.json())
-        .then(data => {
-            //vaciamos el chat
-            chatMessages.innerHTML = '';
-            chatHeader.textContent = friendName;
-            // clase para el amigo: friend-message
-            // clase para mis mensajes: my-message
-            // Mostrar los mensajes
-            for (const key in data.response) {
-                const message = data.response[key];
-                    if (message.sender !== "") {
-                    const p = document.createElement('p');
-                    p.classList.add('message');
-                    if (message.sender === friendName) {
-                        p.classList.add('friend-message');
-                    } else {
-                        p.classList.add('my-message');
-                    }
-            
-                    const pSender = document.createElement('p');
-                    pSender.classList.add('sender');
-                    pSender.textContent = message.sender;
-                    p.appendChild(pSender);
-            
-                    const pContent = document.createElement('p');
-                    pContent.classList.add('contentChat');
-                    pContent.textContent = message.message;
-                    p.appendChild(pContent);
-            
-                    const pTimestamp = document.createElement('p');
-                    pTimestamp.classList.add('timestamp');
-                    pTimestamp.textContent = message.timestamp;
-                    p.appendChild(pTimestamp);
-            
-                    chatMessages.appendChild(p);
-                }
-            }
-        });
+        getMessages(friendName);
+        setInterval(getMessages, 10000)
     }else{
         chatHistory.style.display = 'none';
+        detenerTodosLosIntervalos();
     }
 }
 
+function getMessages(friendName){
+    chatHistory.style.display = 'block';
+    const chatHeader = document.getElementById('amigo-seleccionado');
+    const chatMessages = document.querySelector('.chat-messages');
+    // Obtener los mensajes del amigo
+    fetch(`/getMessages/${friendName}`)
+    .then(response => response.json())
+    .then(data => {
+        //vaciamos el chat
+        chatMessages.innerHTML = '';
+        chatHeader.textContent = friendName;
+        // clase para el amigo: friend-message
+        // clase para mis mensajes: my-message
+        // Mostrar los mensajes
+        for (const key in data.response) {
+            const message = data.response[key];
+                if (message.sender !== "") {
+                const p = document.createElement('p');
+                p.classList.add('message');
+                if (message.sender === friendName) {
+                    p.classList.add('friend-message');
+                } else {
+                    p.classList.add('my-message');
+                }
+        
+                const pSender = document.createElement('p');
+                pSender.classList.add('sender');
+                pSender.textContent = message.sender;
+                p.appendChild(pSender);
+        
+                const pContent = document.createElement('p');
+                pContent.classList.add('contentChat');
+                pContent.textContent = message.message;
+                p.appendChild(pContent);
+        
+                const pTimestamp = document.createElement('p');
+                pTimestamp.classList.add('timestamp');
+                pTimestamp.textContent = message.timestamp;
+                p.appendChild(pTimestamp);
+        
+                chatMessages.appendChild(p);
+            }
+        }
+    });
+}
   
 function ocultarHistorial(){
     var chatHistory = document.getElementById("container");
@@ -91,15 +96,6 @@ fetch('/getFriends')
             friendsList.appendChild(li);
         } 
     });
-
-function ordenarMessages(messages){
-    messages.forEach(message => {
-        message.timestamp = new Date(message.timestamp);
-      });
-      
-      // Ordenar los mensajes por fecha
-      return messages.sort((a, b) => a.timestamp - b.timestamp);      
-}
 
 function getCurrentTime() {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -194,6 +190,7 @@ function deleteFriend(){
         }
     });
 }
+
 
 
 document.getElementById('searchContact').addEventListener('keydown', function(event) {if (event.keyCode === 13)searchContact();});
