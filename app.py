@@ -1,8 +1,6 @@
 from flask import Flask, session, render_template, request, redirect
-import pyrebase 
 import dbFunctions as ddbb
 import json
-import os
 
 app = Flask(__name__)
 
@@ -24,7 +22,10 @@ def index():
             return render_template('sendMoney.html', config=settings)
         else:
             return render_template('login.html', error=True)
-
+    try:
+        session.pop('user')
+    except:
+        pass
     return render_template('login.html')
 
 @app.route("/recovery", methods=["POST", "GET"])
