@@ -21,3 +21,11 @@ const checkPassword = () => {
 
 password.addEventListener("keyup", checkPassword);
 confirmPassword.addEventListener("keyup", checkPassword);
+
+const codeInput = document.getElementById("code-guest");
+
+const url = window.location.href;
+const regex = /[?&]code=([^&#]*)/g;
+const code = regex.exec(url)[1];
+
+codeInput.value = code;

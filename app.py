@@ -39,7 +39,6 @@ def recovery():
 
 @app.route("/registrar", methods=["POST", "GET"])
 def registrar():
-    
     if request.method == 'POST':
         email = request.form.get("email")
         username = request.form.get("username")

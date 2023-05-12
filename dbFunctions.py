@@ -344,3 +344,4 @@ def enviar_email_contrasena(email):
         return True
     except Exception as e:
         return False
+    

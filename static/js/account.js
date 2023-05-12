@@ -5,5 +5,6 @@ fetch('/getAccount').then(response => {response.json()
         document.getElementById("email-account").placeholder = data.account["email"];
         document.getElementById("balance-account").placeholder = data.account["balance"] + "€";
         document.getElementById("code-account").placeholder = data.account["code"] + "                   Usuarios invitados: " + data.account["guest"];
-        document.getElementById("code-link").textContent = "lzarusss.pythonanywhere.com/register?code=" + data.account["code"]; 
+        document.getElementById("code-link").href = "lzarusss.pythonanywhere.com/registrar?code=" + data.account["code"]; 
+        document.getElementById("code-link").textContent = "lzarusss.pythonanywhere.com/registrar?code=" + data.account["code"]; 
 });});
