@@ -1,10 +1,12 @@
 import { showErrorPopup, showSuccessPopup, detenerTodosLosIntervalos, showLoading, hideLoading } from './utils.js';
 
 function mostrarChat(friendName) {
+    showLoading();
     const chatHistory = document.getElementById('container');
 
     if (chatHistory.style.display  === 'none') {
-        setInterval(() => {getMessages(friendName)}, 10000)
+        setInterval(() => {getMessages(friendName)}, 10000);
+        hideLoading();
     }else{
         chatHistory.style.display = 'none';
         detenerTodosLosIntervalos();
