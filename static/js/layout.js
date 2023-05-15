@@ -26,6 +26,8 @@ function notifyInterval(){
     }
   });
 }
+
+document.getElementById('logo').addEventListener('click', () => {window.location.href = '/'});
 const twofa = document.getElementById('twofa').className
 
 if(twofa === '1'){

@@ -10,7 +10,7 @@ app.secret_key = 'secret_key'
 def index():
     if('user' in session):
         settings = ddbb.getSettings(ddbb.getUser(session['user']))
-        return render_template('sendMoney.html', config=settings)
+        return render_template('home.html', config=settings)
     
     if request.method == 'POST':
         email = request.form.get("email")
