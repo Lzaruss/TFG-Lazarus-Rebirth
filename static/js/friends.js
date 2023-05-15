@@ -170,9 +170,9 @@ function deleteFriend(){
     });
 }
 
+showLoading();
 fetch('/getFriends')
     .then(function (response) {
-        showLoading();
         return response.json();
     }).then(function (data) {
         hideLoading();
