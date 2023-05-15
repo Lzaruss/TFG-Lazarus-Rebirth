@@ -1,4 +1,4 @@
-import { showErrorPopup, showSuccessPopup, detenerTodosLosIntervalos } from './utils.js';
+import { showErrorPopup, showSuccessPopup, detenerTodosLosIntervalos, showLoading, hideLoading } from './utils.js';
 
 function mostrarChat(friendName) {
     const chatHistory = document.getElementById('container');
@@ -12,6 +12,7 @@ function mostrarChat(friendName) {
 }
 
 function getMessages(friendName){
+    showLoading();
     const chatHistory = document.getElementById('container');
     
     chatHistory.style.display = 'block';
@@ -21,6 +22,7 @@ function getMessages(friendName){
     fetch(`/getMessages/${friendName}`)
     .then(response => response.json())
     .then(data => {
+        hideLoading();
         //vaciamos el chat
         chatMessages.innerHTML = '';
         chatHeader.textContent = friendName;
@@ -64,11 +66,114 @@ function ocultarHistorial(){
     chatHistory.style.display === "block" ? chatHistory.style.display = "none" : chatHistory.style.display = "block";
 }
 
+
+
+function getCurrentTime() {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const date = new Date();
+    const day = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+    const timeString = `[${day}/${month}/${year} ${hours}:${minutes}:${seconds}]`;
+    return timeString;
+  }
+
+function sendMessage(){
+    showLoading();
+    const actualTime = getCurrentTime();
+    const inputMessage = document.getElementById('sendMessage');
+    const friendName = document.getElementById('amigo-seleccionado').textContent;
+    fetch('/sendMessage', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            friend: friendName,
+            message: inputMessage.value,
+            timestamp: actualTime
+        })
+    })
+        .then(response => response.json()).then(data => {
+            hideLoading();
+            if (data.error) {
+                showErrorPopup("Ha ocurrido un error al enviar el mensaje");
+            }else{
+                const chatMessages = document.querySelector('.chat-messages');
+                const p = document.createElement('p');
+                p.classList.add('message');
+                p.classList.add('my-message');
+                
+                const pContent = document.createElement('p');
+                pContent.classList.add('contentChat');
+                pContent.textContent = inputMessage.value;
+                p.appendChild(pContent);
+                
+                const pTimestamp = document.createElement('p');
+                pTimestamp.classList.add('timestamp');
+                pTimestamp.textContent = getCurrentTime();
+                p.appendChild(pTimestamp);
+                
+                chatMessages.appendChild(p);
+                inputMessage.value = '';
+            }
+    });
+}
+
+
+function searchContact(){
+    showLoading();
+    const friendName = document.getElementById('searchContact');
+    fetch('/addFriend', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            friend: friendName.value,
+        })
+    }).then(response => response.json()).then(data => {
+        hideLoading();
+        if (data.error) {
+            showErrorPopup(data.error);
+        } else {
+            showSuccessPopup("Usuario añadido correctamente!");
+        }
+        friendName.value = '';
+    });
+}
+
+function deleteFriend(){
+    showLoading();
+    const friendName = document.getElementById('amigo-seleccionado').textContent;
+    fetch('/deleteFriend', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            friend: friendName,
+        })
+    }).then(response => response.json()).then(data => {
+        hideLoading();
+        if (data.error) {
+            showErrorPopup(data.error);
+        } else {
+            showSuccessPopup("Usuario eliminado correctamente!");
+            location.reload();
+        }
+    });
+}
+
 fetch('/getFriends')
     .then(function (response) {
+        showLoading();
         return response.json();
     }).then(function (data) {
-
+        hideLoading();
         const friendsList = document.querySelector('.friends-list ul');
         let idCount = 0;
         for (const friendName of Object.keys(data.response)) {
@@ -97,102 +202,6 @@ fetch('/getFriends')
             friendsList.appendChild(li);
         } 
     });
-
-function getCurrentTime() {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const date = new Date();
-    const day = date.getDate();
-    const month = months[date.getMonth()];
-    const year = date.getFullYear();
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    const seconds = date.getSeconds().toString().padStart(2, '0');
-    const timeString = `[${day}/${month}/${year} ${hours}:${minutes}:${seconds}]`;
-    return timeString;
-  }
-
-function sendMessage(){
-    const actualTime = getCurrentTime();
-    const inputMessage = document.getElementById('sendMessage');
-    const friendName = document.getElementById('amigo-seleccionado').textContent;
-    fetch('/sendMessage', {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            friend: friendName,
-            message: inputMessage.value,
-            timestamp: actualTime
-        })
-    })
-        .then(response => response.json()).then(data => {
-            if (data.error) {
-                showErrorPopup("Ha ocurrido un error al enviar el mensaje");
-            }else{
-                const chatMessages = document.querySelector('.chat-messages');
-                const p = document.createElement('p');
-                p.classList.add('message');
-                p.classList.add('my-message');
-                
-                const pContent = document.createElement('p');
-                pContent.classList.add('contentChat');
-                pContent.textContent = inputMessage.value;
-                p.appendChild(pContent);
-                
-                const pTimestamp = document.createElement('p');
-                pTimestamp.classList.add('timestamp');
-                pTimestamp.textContent = getCurrentTime();
-                p.appendChild(pTimestamp);
-                
-                chatMessages.appendChild(p);
-                inputMessage.value = '';
-            }
-    });
-}
-
-
-function searchContact(){
-    const friendName = document.getElementById('searchContact');
-    fetch('/addFriend', {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            friend: friendName.value,
-        })
-    }).then(response => response.json()).then(data => {
-        if (data.error) {
-            showErrorPopup(data.error);
-        } else {
-            showSuccessPopup("Usuario añadido correctamente!");
-        }
-        friendName.value = '';
-    });
-}
-
-function deleteFriend(){
-    const friendName = document.getElementById('amigo-seleccionado').textContent;
-    fetch('/deleteFriend', {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            friend: friendName,
-        })
-    }).then(response => response.json()).then(data => {
-        if (data.error) {
-            showErrorPopup(data.error);
-        } else {
-            showSuccessPopup("Usuario eliminado correctamente!");
-            location.reload();
-        }
-    });
-}
-
-
 
 document.getElementById('searchContact').addEventListener('keydown', function(event) {if (event.keyCode === 13)searchContact();});
 document.getElementById('sendMessage').addEventListener('keydown', function(event) {if (event.keyCode === 13)sendMessage();});

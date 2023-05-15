@@ -1,8 +1,10 @@
-import { showErrorPopup, showSuccessPopup } from './utils.js';
+import { showErrorPopup, showSuccessPopup, showLoading, hideLoading } from './utils.js';
 
+showLoading();
 fetch('/actualUser')
   .then(response => response.text())
   .then(data => {
+    hideLoading();
     document.getElementById('sender-input').placeholder = JSON.parse(data).user;
   })
 

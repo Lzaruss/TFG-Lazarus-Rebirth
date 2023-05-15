@@ -51,7 +51,9 @@
         {% endblock %}
         <div id="error-popup" class="error-popup" style="display: none;"></div>
         <div id="success-popup" class="success-popup" style="display: none;"></div>
-
+        <div id="loading-container" style="display:none;">
+          <img src="{{ url_for('static', filename='img/reload.gif') }}" alt="Cargando...">
+        </div>
       </main>
     </div>
     <footer>

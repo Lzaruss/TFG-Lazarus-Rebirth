@@ -729,3 +729,18 @@ body {
   .search-container button[type="submit"]:hover {
     background-color: #3e8e41;
   }
+
+
+  /*Estilos para el gif de recarga*/
+
+  #loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+  }
+  
+  #loading-container img {
+    width: 30px;
+    height: 30px;
+  }

@@ -1,5 +1,9 @@
+import {showLoading, hideLoading } from './utils.js';
+
+showLoading();
 fetch('/getAccount').then(response => {response.json()
     .then(data => {
+        hideLoading();
         document.getElementById("username-account").placeholder = data.account["username"];
         document.getElementById("wallet-account").placeholder = data.account["wallet"];
         document.getElementById("email-account").placeholder = data.account["email"];

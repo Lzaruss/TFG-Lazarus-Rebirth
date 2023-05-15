@@ -36,3 +36,12 @@ export function detenerTodosLosIntervalos() {
   intervalosActivos = [];
 }
 
+const loadingContainer = document.getElementById('loading-container');
+
+export function showLoading() {
+  loadingContainer.style.display = 'flex';
+}
+
+export function hideLoading() {
+  loadingContainer.style.display = 'none';
+}
