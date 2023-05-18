@@ -20,7 +20,7 @@ def index():
         if ddbb.iniciar_sesion(email, password):
             session['user'] = ddbb.getUser(email)
             settings = ddbb.getSettings(session['user'])
-            return render_template('sendMoney.html', config=settings)
+            return render_template('home.html', config=settings)
         else:
             return render_template('login.html', error=True)
     try:
