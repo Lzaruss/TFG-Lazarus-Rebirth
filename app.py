@@ -349,7 +349,7 @@ def deleteAccount():
                 except:
                     pass
                 return {"status": "success", "message": "Se ha eliminado correctamente!"}
-            return {"error": "No se ha encontrado al usuario!"}
+            return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
         except:
             return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 
