@@ -64,6 +64,7 @@ function getMessages(friendName){
 function ocultarHistorial(){
     var chatHistory = document.getElementById("container");
     chatHistory.style.display === "block" ? chatHistory.style.display = "none" : chatHistory.style.display = "block";
+    detenerTodosLosIntervalos();
 }
 
 

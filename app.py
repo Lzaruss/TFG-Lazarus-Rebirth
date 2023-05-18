@@ -10,7 +10,7 @@ app.secret_key = 'secret_key'
 @app.route('/', methods=["POST", "GET"])
 def index():
     if('user' in session):
-        settings = ddbb.getSettings(ddbb.getUser(session['user']))
+        settings = ddbb.getSettings(session['user'])
         return render_template('home.html', config=settings)
     
     if request.method == 'POST':
@@ -18,8 +18,8 @@ def index():
         password = request.form.get("password")
 
         if ddbb.iniciar_sesion(email, password):
-            session['user'] = email
-            settings = ddbb.getSettings(ddbb.getUser(session['user']))
+            session['user'] = ddbb.getUser(email)
+            settings = ddbb.getSettings(session['user'])
             return render_template('sendMoney.html', config=settings)
         else:
             return render_template('login.html', error=True)
@@ -107,7 +107,7 @@ def check_user_in_session_routes(parameter):
         @wraps(func)
         def wrapper(*args, **kwargs):
             if 'user' in session:
-                settings = ddbb.getSettings(ddbb.getUser(session['user']))
+                settings = ddbb.getSettings(session['user'])
                 return render_template(parameter, config=settings)
             else:
                 return redirect("/")
@@ -162,7 +162,7 @@ def friends():
 @check_login
 def saldo():
     try:
-        return {"saldo" : str(ddbb.getBalance(ddbb.getUser(session['user'])))}
+        return {"saldo" : str(ddbb.getBalance(session['user']))}
     except:
         return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 
@@ -170,7 +170,7 @@ def saldo():
 @check_login
 def actualUser():
     try:
-        return {"user" : ddbb.getUser(session['user'])}
+        return {"user" : session['user']}
     finally:
         pass
 
@@ -181,7 +181,7 @@ def sendBalance():
         userTo  = request.json.get("receiver")
         balance = request.json.get("amount")
 
-        userFrom = ddbb.getUser(session['user'])
+        userFrom = session['user']
 
         if not ddbb.checkUser(userTo) and not ddbb.checkWallet(userTo): 
             return {"error": "El usuario no existe"}
@@ -206,7 +206,7 @@ def sendNotification():
         userTo  = request.json.get("receiver")
         balance = request.json.get("amount")
         message = request.json.get("message")
-        userFrom = ddbb.getUser(session['user'])
+        userFrom = session['user']
 
         if not ddbb.checkUser(userTo) and not ddbb.checkWallet(userTo): 
             return {"error": "El usuario no existe"}
@@ -225,7 +225,7 @@ def sendNotification():
 @check_login
 def getHistory():
     try:
-        return {"transactions" : ddbb.getTransactions(ddbb.getUser(session['user']))}
+        return {"transactions" : ddbb.getTransactions(session['user'])}
     except:
         return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 
@@ -235,7 +235,7 @@ def getHistory():
 @check_login
 def getNotifications():
     try:
-        return {"notifys" : ddbb.getNotifications(ddbb.getUser(session['user']))}
+        return {"notifys" : ddbb.getNotifications(session['user'])}
     except:
         return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 
@@ -243,7 +243,7 @@ def getNotifications():
 @check_login
 def deleteNotification():
     try:
-        ddbb.deleteNotification(ddbb.getUser(session['user']), request.form.get("position"))
+        ddbb.deleteNotification(session['user'], request.form.get("position"))
         return {"status": "success", "message": "Se ha eliminado correctamente!"}
 
     except:
@@ -254,7 +254,7 @@ def deleteNotification():
 @check_login
 def deleteTransaction():
     try:
-        ddbb.deleteTransaction(ddbb.getUser(session['user']))
+        ddbb.deleteTransaction(session['user'])
         return {"status": "success", "message": "Se ha eliminado correctamente!"}
     except:
         return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
@@ -264,7 +264,7 @@ def deleteTransaction():
 @check_login
 def getAccount():
     try:
-        return {"account" : ddbb.getAccount(ddbb.getUser(session['user']))}
+        return {"account" : ddbb.getAccount(session['user'])}
     except:
         return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 
@@ -273,7 +273,7 @@ def getAccount():
 def saveSettings():
     if request.method == "POST":
         try:
-            ddbb.saveSettings(ddbb.getUser(session['user']), {"color": request.json['color'], "hover_color":request.json['hover_color'], "twofa": request.json['twofa'], "notifys": request.json['notify']})
+            ddbb.saveSettings(session['user'], {"color": request.json['color'], "hover_color":request.json['hover_color'], "twofa": request.json['twofa'], "notifys": request.json['notify']})
             return {"status": "success", "message": "Se ha guardado correctamente!"}
         except:
             return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
@@ -291,7 +291,7 @@ def changePassword():
 @check_login
 def getFriends():
     try:
-        return {"response" : ddbb.getFriends(ddbb.getUser(session['user']))}
+        return {"response" : ddbb.getFriends(session['user'])}
     except:
         return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
     
@@ -299,7 +299,7 @@ def getFriends():
 @check_login
 def getMessages(friend_name):
     try:
-        return {"response" : ddbb.getMessages(ddbb.getUser(session['user']), friend_name)}
+        return {"response" : ddbb.getMessages(session['user'], friend_name)}
     except:
         return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 
@@ -310,7 +310,7 @@ def sendMessage():
         try:
             if request.json['message'] == "":
                 return {"error": "No puedes enviar un mensaje vacío!"}
-            if ddbb.addMessage(ddbb.getUser(session['user']), request.json['friend'], request.json['message'], request.json['timestamp']):
+            if ddbb.addMessage(session['user'], request.json['friend'], request.json['message'], request.json['timestamp']):
                 return {"status": "success", "message": "Se ha enviado correctamente!"}
             return {"error": "No se ha podido enviar el mensaje"}
         except:
@@ -321,7 +321,7 @@ def sendMessage():
 def addFriend():
     if request.method == "POST":
         try:
-            if ddbb.addFriend(ddbb.getUser(session['user']), request.json['friend']):
+            if ddbb.addFriend(session['user'], request.json['friend']):
                 return {"status": "success", "message": "Se ha enviado la solicitud correctamente!"}
             return {"error": "No se ha encontrado al usuario!"}
         except:
@@ -332,7 +332,7 @@ def addFriend():
 def deleteFriend():
     if request.method == "POST":
         try:
-            if ddbb.deleteFriend(ddbb.getUser(session['user']), request.json['friend']):
+            if ddbb.deleteFriend(session['user'], request.json['friend']):
                 return {"status": "success", "message": "Se ha eliminado correctamente!"}
             return {"error": "No se ha encontrado al usuario!"}
         except:
@@ -343,7 +343,7 @@ def deleteFriend():
 def deleteAccount():
     if request.method == "POST":
         try:
-            if ddbb.deleteAccount(ddbb.getUser(session['user'])):
+            if ddbb.deleteAccount(session['user']):
                 try:
                     session.pop('user')
                 except:
