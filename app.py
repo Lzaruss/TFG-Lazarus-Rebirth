@@ -1,4 +1,5 @@
 from flask import Flask, session, render_template, request, redirect
+from functools import wraps
 import dbFunctions as ddbb
 import json
 
@@ -99,59 +100,66 @@ def logout():
         session.pop('user')
     finally:
         return redirect("/")
-    
+
+# DECORATORS
+def check_user_in_session_routes(parameter):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if 'user' in session:
+                settings = ddbb.getSettings(ddbb.getUser(session['user']))
+                return render_template(parameter, config=settings)
+            else:
+                return redirect("/")
+        return wrapper
+    return decorator
+
+def check_login(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if 'user' in session:
+            return func(*args, **kwargs)
+        else:
+            return redirect("/")
+    return wrapper
+
+
+# DEFAULT ROUTES
+
 @app.route("/send", methods=["GET", "POST"])
+@check_user_in_session_routes('sendMoney.html')
 def send():
-    if('user' in session):
-        settings = ddbb.getSettings(ddbb.getUser(session['user']))
-        return render_template('sendMoney.html', config=settings)
-    else:
-        return redirect("/")
-    
+    pass
+
 @app.route("/receive", methods=["GET", "POST"])
+@check_user_in_session_routes('requestMoney.html')
 def receive():
-    if('user' in session):
-        settings = ddbb.getSettings(ddbb.getUser(session['user']))
-        return render_template('requestMoney.html', config=settings)
-    else:
-        return redirect("/")
-    
+    pass
+
 @app.route("/transactions", methods=["GET", "POST"])
+@check_user_in_session_routes('transactions.html')
 def transactions():
-    if('user' in session):
-        settings = ddbb.getSettings(ddbb.getUser(session['user']))
-        return render_template('transactions.html', config=settings)
-    else:
-        return redirect("/")
+    pass
     
 @app.route("/account")
+@check_user_in_session_routes('account.html')
 def account():
-    if('user' in session):
-        settings = ddbb.getSettings(ddbb.getUser(session['user']))
-        return render_template('account.html', config=settings)
-    else:
-        return redirect("/")
+    pass
 
 @app.route("/settings")
+@check_user_in_session_routes('settings.html')
 def configuracion():
-    if('user' in session):
-        settings = ddbb.getSettings(ddbb.getUser(session['user']))
-        return render_template('settings.html', config=settings)
-    else:
-        return redirect("/")
+    pass
     
 @app.route("/friends", methods=["GET", "POST"])
+@check_user_in_session_routes('friends.html')
 def friends():
-    if('user' in session):
-        settings = ddbb.getSettings(ddbb.getUser(session['user']))
-        return render_template('friends.html', config=settings)
-    else:
-        return redirect("/")
-
+    pass
 
 # API
 
 @app.route("/saldo", methods=["GET"])
+@check_login
 def saldo():
     try:
         return {"saldo" : str(ddbb.getBalance(ddbb.getUser(session['user'])))}
@@ -159,14 +167,15 @@ def saldo():
         return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 
 @app.route("/actualUser", methods=["GET"])  
+@check_login
 def actualUser():
     try:
         return {"user" : ddbb.getUser(session['user'])}
     finally:
         pass
 
-
 @app.route("/sendBalance", methods=["GET", "POST"])
+@check_login
 def sendBalance():
     if request.method == "POST":
         userTo  = request.json.get("receiver")
@@ -191,6 +200,7 @@ def sendBalance():
             return {"error": "No se ha podido enviar la petición, comprueba que los datos estan correctos!"}
     
 @app.route("/sendNotification", methods=["GET", "POST"])
+@check_login
 def sendNotification():
     if request.method == "POST":
         userTo  = request.json.get("receiver")
@@ -212,6 +222,7 @@ def sendNotification():
     
 # get History of transactions
 @app.route("/getHistory", methods=["GET"])
+@check_login
 def getHistory():
     try:
         return {"transactions" : ddbb.getTransactions(ddbb.getUser(session['user']))}
@@ -221,6 +232,7 @@ def getHistory():
     
 # get notifications
 @app.route("/getNotifications", methods=["GET"])
+@check_login
 def getNotifications():
     try:
         return {"notifys" : ddbb.getNotifications(ddbb.getUser(session['user']))}
@@ -228,6 +240,7 @@ def getNotifications():
         return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 
 @app.route("/deleteNotification", methods=["GET", "POST"])
+@check_login
 def deleteNotification():
     try:
         ddbb.deleteNotification(ddbb.getUser(session['user']), request.form.get("position"))
@@ -238,6 +251,7 @@ def deleteNotification():
 
 
 @app.route("/deleteTransaction", methods=["GET", "POST"])
+@check_login
 def deleteTransaction():
     try:
         ddbb.deleteTransaction(ddbb.getUser(session['user']))
@@ -245,8 +259,9 @@ def deleteTransaction():
     except:
         return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 
-    
+
 @app.route("/getAccount", methods=["GET"]) ###
+@check_login
 def getAccount():
     try:
         return {"account" : ddbb.getAccount(ddbb.getUser(session['user']))}
@@ -254,6 +269,7 @@ def getAccount():
         return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 
 @app.route("/saveSettings", methods=["POST"]) ###
+@check_login
 def saveSettings():
     if request.method == "POST":
         try:
@@ -263,6 +279,7 @@ def saveSettings():
             return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 
 @app.route("/changePassword", methods=["POST"]) 
+@check_login
 def changePassword():
     if request.method == "POST":
         if ddbb.enviar_email_contrasena(session['user']):
@@ -271,6 +288,7 @@ def changePassword():
             return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
     
 @app.route("/getFriends")
+@check_login
 def getFriends():
     try:
         return {"response" : ddbb.getFriends(ddbb.getUser(session['user']))}
@@ -278,6 +296,7 @@ def getFriends():
         return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
     
 @app.route("/getMessages/<friend_name>")
+@check_login
 def getMessages(friend_name):
     try:
         return {"response" : ddbb.getMessages(ddbb.getUser(session['user']), friend_name)}
@@ -285,6 +304,7 @@ def getMessages(friend_name):
         return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 
 @app.route("/sendMessage", methods=["POST"])
+@check_login
 def sendMessage():
     if request.method == "POST":
         try:
@@ -297,6 +317,7 @@ def sendMessage():
             return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 
 @app.route("/addFriend", methods=["POST"])
+@check_login
 def addFriend():
     if request.method == "POST":
         try:
@@ -307,6 +328,7 @@ def addFriend():
             return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
 
 @app.route("/deleteFriend", methods=["POST"])
+@check_login
 def deleteFriend():
     if request.method == "POST":
         try:
@@ -317,6 +339,7 @@ def deleteFriend():
             return {"error": "Ha ocurrido un error, vuelve a intentarlo en unos minutos o contacta con el administrador"}
         
 @app.route("/deleteAccount", methods=["POST"])
+@check_login
 def deleteAccount():
     if request.method == "POST":
         try:
