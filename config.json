@@ -1,10 +1,10 @@
 {
-    "apiKey": "AIzaSyAyOFO875u8wYYbFbjpyZBDzAEuUQtICYM",
+    "apiKey": "xxxx",
     "authDomain": "tfg-launcher.firebaseapp.com",
-    "databaseURL": "https://tfg-launcher-default-rtdb.firebaseio.com",
-    "projectId": "tfg-launcher",
-    "storageBucket": "tfg-launcher.appspot.com",
-    "messagingSenderId": "364319578115",
-    "appId": "1:364319578115:web:1b344ae37a3e6926a25636",
-    "measurementId": "G-2GGEX0L1N6"
+    "databaseURL": "xxxx",
+    "projectId": "xxxx",
+    "storageBucket": "xxxx",
+    "messagingSenderId": "xxxx",
+    "appId": "xxxx",
+    "measurementId": "xxxx"
 }
