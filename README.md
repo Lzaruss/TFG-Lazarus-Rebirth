@@ -1,6 +1,7 @@
 # Lazarus Rebirth
 
-![Screenshot of the Application](screenshot.png)
+![image](https://github.com/Lzaruss/TFG/assets/104428151/059e1764-91ae-433a-9e55-ac9021c993fb)
+
 
 ## Description
 
@@ -38,3 +39,33 @@ For more details on the database structure, refer to [CONFIG.md](CONFIG.md).
 ## Product Deployment
 
 The application is deployed on PythonAnywhere. To access the production version, visit https://www.lzarusss.pythonanywhere.com
+
+## Visual aspect
+
+### My account
+![image](https://github.com/Lzaruss/TFG/assets/104428151/45eb1e4d-8c0b-44d3-9794-66c3a19b51b8)
+
+### Transactions
+![image](https://github.com/Lzaruss/TFG/assets/104428151/9f1687f0-c5af-4ed4-8036-cea201981510)
+
+### Send Money
+![image](https://github.com/Lzaruss/TFG/assets/104428151/38ae0e00-caa8-4259-9002-042897c7c0c0)
+
+### Receive Money 
+![image](https://github.com/Lzaruss/TFG/assets/104428151/696199b6-eeea-4d1c-b8e8-4965a13697b8)
+
+### Friends
+![image](https://github.com/Lzaruss/TFG/assets/104428151/4cdaec07-2ddb-4e16-8cec-a226fa21add4)
+  #### Chat IRL
+  ![image](https://github.com/Lzaruss/TFG/assets/104428151/572cdaee-ffb1-45d0-ab96-f9238ec6bc41)
+
+### Settings
+![image](https://github.com/Lzaruss/TFG/assets/104428151/ed30f6af-c450-42e7-89b6-0708e8a20d97)
+
+### Notifications
+![image](https://github.com/Lzaruss/TFG/assets/104428151/023f7736-ca46-4358-ae6a-6e418f0cefb3)
+
+
+
+
+
